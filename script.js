@@ -93,11 +93,21 @@ const FACEBOOK_URL = "https://www.facebook.com/alexander.monfiel.7/";
 const strapSvg = document.getElementById("strapSvg");
 const badge = document.getElementById("badge");
 const card = document.getElementById("card");
-const hook = document.getElementById("hook");
-const hookBack = document.getElementById("hookBack");
 const link = document.getElementById("link");
 const hanger = document.getElementById("hanger");
 const cardPivot = document.getElementById("cardPivot");
+const cardInner = document.getElementById("cardInner");
+// hook parts redrawn from the card's turn angle (see drawHook)
+const hookLegs = ["hookA", "hookB"].map((id) => {
+  const el = document.getElementById(id);
+  return {
+    el,
+    cast: el.querySelector(".hk-cast"),
+    castTight: el.querySelector(".hk-cast-tight"),
+    body: el.querySelectorAll(".hk-body"),
+    spec: el.querySelector(".hk-spec"),
+  };
+});
 const steelH = document.getElementById("ln-steelH");
 const sv = (id) => document.getElementById(id);
 const ribbonEl = sv("ribbon"),
@@ -116,7 +126,18 @@ const ribbonEl = sv("ribbon"),
   textPathEl = sv("strapTextPath"),
   weaveEl = sv("ln-weave"),
   sheenGrad = sv("ln-sheen"),
-  fiberEl = sv("fiberRect");
+  fiberEl = sv("fiberRect"),
+  hkSlotO = sv("hkSlotO"),
+  hkSlot = sv("hkSlot"),
+  hkSlotFar = sv("hkSlotFar"),
+  hkContact = sv("hkContact"),
+  hkGateO = sv("hkGateO"),
+  hkGate = sv("hkGate"),
+  ringPatch = sv("ringPatch"),
+  eyePatch = sv("eyePatch"),
+  textFade = sv("ln-textFade"),
+  textFadeStops = textFade.querySelectorAll("stop");
+const CRIMP_HALF = 10.2; // the band is gathered to the crimp's width where it enters it
 
 // QR code on the back of the card
 (function buildQR() {
@@ -145,7 +166,7 @@ const GIVE = 14; // px the woven band can stretch beyond its rest length
 const CARD_ARM = 150; // hook contact -> card centre of mass (px), sets the swing period
 const HOOK_ARM = 18; // swivel eye -> hook centre of mass (px): short, quick pendulum
 const LINK_ARM = 6; // crimp eyelet -> connecting ring centre (px): tiny, jittery pendulum
-const SLIDE = 19; // how far the slot can slide along the hook (px)
+const SLIDE = 16; // how far the slot can slide along the hook (px): keeps the wire inside the 46px slot
 let L0 = 0, // resting strap length
   seg = 0; // rest length of one rope segment
 const P = Array.from({ length: N }, () => ({ x: 0, y: 0, px: 0, py: 0 }));
@@ -170,7 +191,11 @@ let alpha = 0,
   alphaV = 0; // connecting ring swing angle about the crimp eyelet (rad)
 let sx = 0,
   sxV = 0; // card slid along its slot relative to the hook (px)
-let twist = 0; // band twist at the free end (rad)
+let twist = 0, // band twist at the free end (rad)
+  twistV = 0;
+let yaw = 0, // card turn about the vertical axis through the hook (deg): 0 = front, 180 = back
+  yawV = 0,
+  yawTarget = 0;
 let swivel = 0; // hook rotation around its vertical axis (deg)
 let textScroll = 0,
   textPeriod = 0;
@@ -250,7 +275,18 @@ function onUp(e) {
   try {
     badge.releasePointerCapture(e.pointerId);
   } catch (_) {}
-  if (grab.moved < 6) card.classList.toggle("flipped"); // a tap/click flips the card
+  if (grab.moved < 6) flip(); // a tap/click flips the card
+}
+
+// a flick of the hand: spins the card on the hook and sets the whole lanyard swinging
+function flip() {
+  card.classList.toggle("flipped");
+  yawTarget = card.classList.contains("flipped") ? 180 : 0;
+  if (reduceMotion) return;
+  const dir = yawTarget ? 1 : -1;
+  yawV += dir * 2.5;
+  P[N - 1].px += dir * 1.6; // sideways jolt at the rope end
+  psiV += dir * 0.006;
 }
 
 badge.addEventListener("pointerdown", onDown);
@@ -365,12 +401,27 @@ function step() {
   sxV *= 0.8;
   sx = clamp(sx + sxV, -SLIDE, SLIDE);
 
+  // card turn: spring toward the flip target, with inertia and a little overshoot
+  if (reduceMotion) {
+    yaw = yawTarget;
+    yawV = 0;
+  } else {
+    yawV += (yawTarget - yaw) * 0.005;
+    yawV *= 0.915;
+    yaw += yawV;
+  }
+
+  // band twist: torsion spring with inertia; a spinning card winds the band up, then it unwinds
   const twistTarget =
-    clamp(evxS * 0.05, -0.55, 0.55) + Math.sin(t / 90) * 0.14 * idle;
-  twist += (twistTarget - twist) * 0.08;
-  // swivel: jolts spin it, and at rest it slowly turns on its axis like a real one
+    clamp(evxS * 0.05, -0.55, 0.55) +
+    Math.sin(t / 90) * 0.14 * idle +
+    clamp(yawV * 0.12, -1.1, 1.1);
+  twistV += (twistTarget - twist) * 0.03;
+  twistV *= 0.84;
+  twist += twistV;
+  // swivel: jolts spin it, at rest it slowly turns on its axis, and it lags behind the card's turn
   const swivelTarget =
-    clamp(evxS * 4, -40, 40) + Math.sin(t / 140) * 24 * idle;
+    clamp(evxS * 4, -40, 40) + Math.sin(t / 140) * 24 * idle + yaw * 0.5;
   swivel += (swivelTarget - swivel) * 0.12;
 
   if (!reduceMotion && textPeriod > 0)
@@ -438,11 +489,18 @@ function render() {
     const s = i / (N - 1);
     twI[i] = twist * s * s * (3 - 2 * s);
     const gather = Math.max(0, 1 - (N - 1 - i) / 3.5);
-    halfW[i] =
-      (STRAP_W / 2) *
-      Math.max(0.12, Math.abs(Math.cos(twI[i]))) *
-      (1 - 0.18 * tension * gather);
+    const w = i === N - 1 ? CRIMP_HALF : (STRAP_W / 2) * (1 - 0.18 * tension * gather);
+    halfW[i] = w * Math.max(0.12, Math.abs(Math.cos(twI[i])));
   }
+  // lettering: fade it where the band turns edge-on, and over the last segment where it narrows into the crimp
+  textFadeStops.forEach((st) => {
+    const o = +st.getAttribute("offset");
+    const tw = twist * o * o * (3 - 2 * o);
+    let a = clamp((Math.abs(Math.cos(tw)) - 0.35) / 0.45, 0, 1);
+    a *= clamp(((1 - o) * (N - 1) - 0.6) / 0.9, 0, 1);
+    st.setAttribute("stop-opacity", f(a));
+  });
+  textFade.setAttribute("y2", f(Math.max(1, end.y)));
 
   let left = "",
     center = "",
@@ -574,13 +632,63 @@ function render() {
   badge.style.transform = `translate(calc(-50% + ${f(end.x)}px), ${f(end.y)}px) rotate(${-phi}rad)`;
   link.style.transform = `rotate(${alpha + phi}rad)`;
   hanger.style.transform = `rotate(${theta - alpha}rad)`;
-  hook.style.transform = hookBack.style.transform = `perspective(140px) rotateY(${f(swivel)}deg)`;
-  // reflections slide across the barrel as the swivel turns
+  // interlocking crossings: each piece follows the part it belongs to (ring vs crimp, eye vs ring)
+  const deg = 180 / Math.PI;
+  ringPatch.setAttribute("transform", `rotate(${f((alpha + phi) * deg)} 11 18.3)`);
+  eyePatch.setAttribute("transform", `rotate(${f((theta - alpha) * deg)} 7 12.3)`);
+  // the hook is locked to the card by the slot; only the swivel barrel turns, shown by its sliding reflections
   steelH.setAttribute("gradientTransform", `translate(${f(-swivel / 160)} 0)`);
   cardPivot.style.transform = `rotate(${psi - theta}rad)`;
   const tiltY = clamp(evxS * 2, -22, 22);
   const tiltX = clamp(-evyS * 1.1, -10, 10);
   card.style.transform = `translateX(${f(sx)}px) perspective(1200px) rotateX(${f(tiltX)}deg) rotateY(${f(tiltY)}deg)`;
+  // the card turns about the hook (it hangs on it), not about its own centre
+  cardInner.style.transformOrigin = `calc(50% - ${f(sx)}px) 50%`;
+  cardInner.style.transform = `rotateY(${f(yaw)}deg)`;
+  drawHook(((yaw + tiltY) * Math.PI) / 180);
+}
+
+// Hook through the slot, seen from the front. Its plane stands square to the card, turned HOOK_PHI0 off
+// the card's normal, so the legs (HOOK_D apart) look HOOK_D*sin(HOOK_PHI0 - turn) apart on screen.
+// Coordinates are the hook SVG's: axis x=11, legs from y~19 down to the curve, slot top edge at y=33.
+const HOOK_D = 12.6,
+  HOOK_PHI0 = 0.46;
+function drawHook(turn) {
+  const s = HOOK_D * Math.sin(HOOK_PHI0 - turn);
+  const xa = 11 - s / 2, // leg A: card-front side
+    xb = 11 + s / 2; // leg B: card-back side
+  const rx = f(Math.max(Math.abs(s) / 2, 0.01));
+  const swA = s > 0 ? 0 : 1, // arc sweep, leg A down to the bottom of the curve
+    swB = s > 0 ? 1 : 0; // leg B down to the bottom of the curve
+  const bottom = "11 34.7";
+  const halfA = `A${rx} 5.7 0 0 ${swA} ${bottom}`;
+  const halfB = `A${rx} 5.7 0 0 ${swB} ${bottom}`;
+  const front = Math.cos(turn) > 0; // viewer sees the card's front, so leg A is the near one
+  const legs = [
+    { leg: hookLegs[0], x: xa, d: `M11 16.2L${f(xa)} 19V29${halfA}`, near: front },
+    { leg: hookLegs[1], x: xb, d: `M${f(xb)} 19.6V29${halfB}`, near: !front },
+  ];
+  for (const { leg, x, d, near } of legs) {
+    leg.el.classList.toggle("near", near);
+    for (const b of leg.body) b.setAttribute("d", d);
+    leg.spec.setAttribute("d", `M${f(x - 0.8)} 19.8V28.6`);
+    // shadow the near leg casts on the card face: soft up top, tight where it meets the slot
+    leg.cast.setAttribute("d", `M${f(x + 2.2)} 21.4L${f(x + 1)} 33`);
+    leg.castTight.setAttribute("d", `M${f(x + 1.4)} 29.5L${f(x + 1)} 33`);
+  }
+  // curve inside the slot: A side down to the bottom, then back up toward B
+  const slot = `M${f(xa)} 29${halfA}A${rx} 5.7 0 0 ${1 - swB} ${f(xb)} 29`;
+  hkSlotO.setAttribute("d", slot);
+  hkSlot.setAttribute("d", slot);
+  hkSlotFar.setAttribute(
+    "d",
+    front ? `M${bottom}A${rx} 5.7 0 0 ${1 - swB} ${f(xb)} 29` : `M${bottom}A${rx} 5.7 0 0 ${1 - swA} ${f(xa)} 29`,
+  );
+  const k = Math.min(1.5, Math.abs(s) * 0.27 + 0.3);
+  hkContact.setAttribute("d", `M${f(11 - k)} 32.7Q11 33.5 ${f(11 + k)} 32.7`);
+  const gate = `M${f(xb)} 19.6L${f(xa)} 18.6`;
+  hkGateO.setAttribute("d", gate);
+  hkGate.setAttribute("d", gate);
 }
 
 function frame(now) {
