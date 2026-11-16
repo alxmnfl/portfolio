@@ -1,0 +1,771 @@
+// ---------- Year ----------
+document.getElementById("year").textContent = new Date().getFullYear();
+
+// ---------- Navbar: scrolled state + mobile menu ----------
+const nav = document.querySelector(".nav");
+const burger = document.getElementById("burger");
+const navLinks = document.getElementById("navLinks");
+
+window.addEventListener("scroll", () => {
+  nav.classList.toggle("scrolled", window.scrollY > 20);
+});
+
+burger.addEventListener("click", () => {
+  burger.classList.toggle("open");
+  navLinks.classList.toggle("open");
+});
+navLinks.querySelectorAll("a").forEach((a) =>
+  a.addEventListener("click", () => {
+    burger.classList.remove("open");
+    navLinks.classList.remove("open");
+  }),
+);
+
+// ---------- Active nav link while scrolling ----------
+const sections = [...document.querySelectorAll("section[id]")];
+const linkFor = (id) => navLinks.querySelector(`a[href="#${id}"]`);
+
+const activeObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        navLinks
+          .querySelectorAll("a")
+          .forEach((a) => a.classList.remove("active"));
+        linkFor(e.target.id)?.classList.add("active");
+      }
+    });
+  },
+  { rootMargin: "-45% 0px -50% 0px" },
+);
+sections.forEach((s) => activeObserver.observe(s));
+
+// ---------- Reveal on scroll ----------
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add("in");
+        revealObserver.unobserve(e.target);
+      }
+    });
+  },
+  { threshold: 0.15 },
+);
+document
+  .querySelectorAll(".reveal")
+  .forEach((el) => revealObserver.observe(el));
+
+// ---------- Typing effect ----------
+const roles = ["Back-End Developer", "PHP", "Laravel", "MySQL", "REST APIs"];
+const typed = document.getElementById("typed");
+let roleIdx = 0,
+  charIdx = 0,
+  deleting = false;
+
+function type() {
+  const word = roles[roleIdx];
+  typed.textContent = word.slice(0, charIdx);
+  if (!deleting && charIdx < word.length) {
+    charIdx++;
+    setTimeout(type, 70);
+  } else if (!deleting && charIdx === word.length) {
+    deleting = true;
+    setTimeout(type, 1800);
+  } else if (deleting && charIdx > 0) {
+    charIdx--;
+    setTimeout(type, 40);
+  } else {
+    deleting = false;
+    roleIdx = (roleIdx + 1) % roles.length;
+    setTimeout(type, 300);
+  }
+}
+if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  charIdx = roles[0].length;
+  setTimeout(type, 2000);
+}
+
+// ---------- Lanyard: woven band simulation + click to flip ----------
+// Change this to your real Facebook profile link.
+const FACEBOOK_URL = "https://www.facebook.com/alexander.monfiel.7/";
+
+const strapSvg = document.getElementById("strapSvg");
+const badge = document.getElementById("badge");
+const card = document.getElementById("card");
+const hook = document.getElementById("hook");
+const hookBack = document.getElementById("hookBack");
+const link = document.getElementById("link");
+const hanger = document.getElementById("hanger");
+const cardPivot = document.getElementById("cardPivot");
+const steelH = document.getElementById("ln-steelH");
+const sv = (id) => document.getElementById(id);
+const ribbonEl = sv("ribbon"),
+  ribbonClipEl = sv("ribbonClip"),
+  centerEl = sv("centerPath"),
+  shadeLEl = sv("shadeL"),
+  shadeREl = sv("shadeR"),
+  hiliteEl = sv("hilite"),
+  sheenEl = sv("sheenPath"),
+  stitchLEl = sv("stitchL"),
+  stitchREl = sv("stitchR"),
+  threadEl = sv("redThread"),
+  creasesEl = sv("creases"),
+  gatherEl = sv("gather"),
+  endShadeEl = sv("endShade"),
+  textPathEl = sv("strapTextPath"),
+  weaveEl = sv("ln-weave"),
+  sheenGrad = sv("ln-sheen"),
+  fiberEl = sv("fiberRect");
+
+// QR code on the back of the card
+(function buildQR() {
+  const box = document.getElementById("qr");
+  const urlText = document.getElementById("fbUrlText");
+  urlText.textContent = FACEBOOK_URL.replace(/^https?:\/\/(www\.)?/, "");
+  if (typeof QRCode === "undefined") {
+    box.innerHTML = `<a href="${FACEBOOK_URL}" target="_blank" rel="noopener" style="color:#0b1022;font-size:.7rem">${FACEBOOK_URL}</a>`;
+    return;
+  }
+  new QRCode(box, {
+    text: FACEBOOK_URL,
+    width: 150,
+    height: 150,
+    colorDark: "#0b1022",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.M,
+  });
+})();
+
+// --- rope simulation (verlet chain, anchor pinned at the top, card hanging on the end) ---
+const N = 18; // rope points
+const STRAP_W = 40; // band width (px)
+const GRAVITY = 0.5; // px / frame^2 at 60fps
+const GIVE = 14; // px the woven band can stretch beyond its rest length
+const CARD_ARM = 150; // hook contact -> card centre of mass (px), sets the swing period
+const HOOK_ARM = 18; // swivel eye -> hook centre of mass (px): short, quick pendulum
+const LINK_ARM = 6; // crimp eyelet -> connecting ring centre (px): tiny, jittery pendulum
+const SLIDE = 19; // how far the slot can slide along the hook (px)
+let L0 = 0, // resting strap length
+  seg = 0; // rest length of one rope segment
+const P = Array.from({ length: N }, () => ({ x: 0, y: 0, px: 0, py: 0 }));
+let dragging = false;
+let idle = 1; // 1 = faint idle sway on, 0 = off
+let t = 0;
+let acc = 0; // sim time accumulator (60fps steps)
+let last = performance.now();
+const grab = { px: 0, py: 0, x0: 0, y0: 0, moved: 0 };
+const target = { x: 0, y: 0 }; // where the pointer wants the rope end
+let evx = 0,
+  evy = 0, // rope-end velocity (px / frame)
+  evxS = 0,
+  evyS = 0, // smoothed
+  axS = 0,
+  ayS = 0; // smoothed rope-end acceleration
+let psi = 0,
+  psiV = 0; // card swing angle about the hook contact (rad) + angular velocity
+let theta = 0,
+  thetaV = 0; // hook swing angle about the swivel eye (rad)
+let alpha = 0,
+  alphaV = 0; // connecting ring swing angle about the crimp eyelet (rad)
+let sx = 0,
+  sxV = 0; // card slid along its slot relative to the hook (px)
+let twist = 0; // band twist at the free end (rad)
+let swivel = 0; // hook rotation around its vertical axis (deg)
+let textScroll = 0,
+  textPeriod = 0;
+
+const reduceMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)",
+).matches;
+
+function measure() {
+  const prev = L0;
+  L0 = strapSvg.getBoundingClientRect().height;
+  seg = L0 / (N - 1);
+  const k = prev ? L0 / prev : 0;
+  for (let i = 0; i < N; i++) {
+    const p = P[i];
+    if (k) {
+      p.x *= k; p.y *= k; p.px *= k; p.py *= k;
+    } else {
+      p.x = p.px = 0;
+      p.y = p.py = i * seg;
+    }
+  }
+  fiberEl.setAttribute("y", -30);
+  fiberEl.setAttribute("height", L0 * 1.3 + 80);
+}
+measure();
+window.addEventListener("resize", measure);
+
+function measureText() {
+  textPeriod = textPathEl.getComputedTextLength() / 2; // lettering is repeated twice
+}
+measureText();
+document.fonts?.ready.then(measureText);
+
+function rubber(v, limit) {
+  // soft limit: gets harder to pull the further you go
+  const s = Math.sign(v),
+    a = Math.abs(v);
+  return s * (limit * (1 - 1 / (1 + a / limit)));
+}
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+function onDown(e) {
+  dragging = true;
+  badge.classList.add("dragging");
+  badge.setPointerCapture(e.pointerId);
+  const end = P[N - 1];
+  grab.px = e.clientX;
+  grab.py = e.clientY;
+  grab.x0 = end.x;
+  grab.y0 = end.y;
+  grab.moved = 0;
+  target.x = end.x;
+  target.y = end.y;
+}
+function onMove(e) {
+  if (!dragging) return;
+  const dx = e.clientX - grab.px,
+    dy = e.clientY - grab.py;
+  grab.moved = Math.max(grab.moved, Math.hypot(dx, dy));
+  let tx = grab.x0 + dx,
+    ty = grab.y0 + dy;
+  // woven band: swings freely in any direction, gives only ~GIVE px when pulled taut
+  const d = Math.hypot(tx, ty);
+  if (d > L0) {
+    const r = (L0 + rubber(d - L0, GIVE)) / d;
+    tx *= r;
+    ty *= r;
+  }
+  target.x = tx;
+  target.y = Math.max(ty, -L0 * 0.7);
+}
+function onUp(e) {
+  if (!dragging) return;
+  dragging = false;
+  badge.classList.remove("dragging");
+  try {
+    badge.releasePointerCapture(e.pointerId);
+  } catch (_) {}
+  if (grab.moved < 6) card.classList.toggle("flipped"); // a tap/click flips the card
+}
+
+badge.addEventListener("pointerdown", onDown);
+badge.addEventListener("pointermove", onMove);
+badge.addEventListener("pointerup", onUp);
+badge.addEventListener("pointercancel", onUp);
+badge.addEventListener("dragstart", (e) => e.preventDefault());
+
+// one 60fps physics step
+function step() {
+  const end = P[N - 1];
+  const pevx = evx,
+    pevy = evy;
+
+  // integrate (verlet). The card on the end is heavy: less air drag, more momentum.
+  for (let i = 1; i < N; i++) {
+    const p = P[i];
+    const heavy = i === N - 1;
+    const damp = heavy ? 0.992 : 0.975;
+    const vx = (p.x - p.px) * damp,
+      vy = (p.y - p.py) * damp;
+    p.px = p.x;
+    p.py = p.y;
+    p.x += vx;
+    p.y += vy + GRAVITY;
+  }
+  // faint draught so the badge never hangs perfectly still
+  if (!dragging) end.x += Math.sin(t / 70) * 0.012 * idle;
+  if (dragging) {
+    end.x = target.x;
+    end.y = target.y;
+  }
+  P[0].x = P[0].y = 0;
+
+  // constraints: fixed segment length + a little bending stiffness
+  for (let it = 0; it < 14; it++) {
+    for (let i = 0; i < N - 1; i++) {
+      const a = P[i],
+        b = P[i + 1];
+      const dx = b.x - a.x,
+        dy = b.y - a.y;
+      const d = Math.hypot(dx, dy) || 1e-6;
+      const diff = (d - seg) / d;
+      const bEnd = i + 1 === N - 1;
+      const wa = i === 0 ? 0 : bEnd ? (dragging ? 1 : 0.85) : 0.5;
+      const wb = bEnd ? (dragging ? 0 : 0.15) : i === 0 ? 1 : 0.5;
+      a.x += dx * diff * wa;
+      a.y += dy * diff * wa;
+      b.x -= dx * diff * wb;
+      b.y -= dy * diff * wb;
+    }
+    // the band resists sharp kinks: push every second point apart when it folds
+    for (let i = 0; i < N - 2; i++) {
+      const a = P[i],
+        b = P[i + 2];
+      const dx = b.x - a.x,
+        dy = b.y - a.y;
+      const d = Math.hypot(dx, dy) || 1e-6;
+      const rest = 2 * seg;
+      if (d < rest * 0.995) {
+        const diff = ((d - rest) / d) * 0.12;
+        const wa = i === 0 ? 0 : 0.5;
+        const wb = i + 2 === N - 1 && dragging ? 0 : 0.5;
+        a.x += dx * diff * wa;
+        a.y += dy * diff * wa;
+        b.x -= dx * diff * wb;
+        b.y -= dy * diff * wb;
+      }
+    }
+    P[0].x = P[0].y = 0;
+    if (dragging) {
+      end.x = target.x;
+      end.y = target.y;
+    }
+  }
+
+  // rope-end motion feeds the card swing, the band twist and the ring swivel
+  evx = end.x - end.px;
+  evy = end.y - end.py;
+  evxS += (evx - evxS) * 0.25;
+  evyS += (evy - evyS) * 0.25;
+  axS += (evx - pevx - axS) * 0.5;
+  ayS += (evy - pevy - ayS) * 0.5;
+
+  // connecting ring: tiny pendulum in the crimp eyelet, yanked by the hook below it
+  alphaV +=
+    (-(GRAVITY - ayS) * Math.sin(alpha) + axS * Math.cos(alpha)) / LINK_ARM +
+    (theta - alpha) * 0.35;
+  alphaV *= 0.8;
+  alpha = clamp(alpha + alphaV, -1.3, 1.3);
+
+  // hook: short pendulum on the swivel eye, dragged around by the card hanging on it
+  thetaV +=
+    (-(GRAVITY - ayS) * Math.sin(theta) + axS * Math.cos(theta)) / HOOK_ARM +
+    (psi - theta) * 0.2;
+  thetaV *= 0.88;
+  theta = clamp(theta + thetaV, -1.2, 1.2);
+
+  // card: pendulum on the hook contact; an off-centre slot shifts its balance
+  const g = GRAVITY - ayS;
+  const L2 = CARD_ARM * CARD_ARM + sx * sx;
+  psiV +=
+    (-g * (CARD_ARM * Math.sin(psi) + sx * Math.cos(psi)) +
+      axS * CARD_ARM * Math.cos(psi)) /
+    L2;
+  if (dragging) psiV += -psi * 0.08; // a hand holding the card keeps it steady
+  psiV *= dragging ? 0.85 : 0.972;
+  psi = clamp(psi + psiV, -1, 1);
+
+  // slot slides on the hook: downhill when the card tilts, thrown by sideways jolts
+  sxV += (Math.sin(psi) * SLIDE - sx) * 0.05 - axS * 0.12;
+  sxV *= 0.8;
+  sx = clamp(sx + sxV, -SLIDE, SLIDE);
+
+  const twistTarget =
+    clamp(evxS * 0.05, -0.55, 0.55) + Math.sin(t / 90) * 0.14 * idle;
+  twist += (twistTarget - twist) * 0.08;
+  // swivel: jolts spin it, and at rest it slowly turns on its axis like a real one
+  const swivelTarget =
+    clamp(evxS * 4, -40, 40) + Math.sin(t / 140) * 24 * idle;
+  swivel += (swivelTarget - swivel) * 0.12;
+
+  if (!reduceMotion && textPeriod > 0)
+    textScroll = (textScroll + 0.4) % textPeriod;
+}
+
+// --- drawing ---
+const f = (v) => v.toFixed(1);
+const hash = (n) => {
+  const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+  return x - Math.floor(x);
+};
+// fixed per-point randomness so wrinkles stay put instead of flickering
+const R = Array.from({ length: N }, (_, i) => ({
+  a: hash(i * 3 + 1),
+  b: hash(i * 3 + 2),
+  c: hash(i * 3 + 3),
+}));
+const tx = new Float32Array(N),
+  ty = new Float32Array(N),
+  nx = new Float32Array(N),
+  ny = new Float32Array(N),
+  kap = new Float32Array(N),
+  halfW = new Float32Array(N),
+  twI = new Float32Array(N);
+
+function line(x1, y1, x2, y2, stroke, w) {
+  return `<path d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}" stroke="${stroke}" stroke-width="${w}"/>`;
+}
+// a fold: dark line + light line one pixel apart, so it reads as a ridge
+function fold(x1, y1, x2, y2, ox, oy, o, w) {
+  return (
+    line(x1 + ox, y1 + oy, x2 + ox, y2 + oy, `rgba(0,0,0,${f(0.55 * o)})`, w) +
+    line(x1 - ox, y1 - oy, x2 - ox, y2 - oy, `rgba(255,255,255,${f(0.32 * o)})`, w * 0.75)
+  );
+}
+
+function render() {
+  const end = P[N - 1];
+  let ropeLen = 0;
+  for (let i = 0; i < N; i++) {
+    const a = P[Math.max(0, i - 1)],
+      b = P[Math.min(N - 1, i + 1)];
+    const dx = b.x - a.x,
+      dy = b.y - a.y;
+    const d = Math.hypot(dx, dy) || 1;
+    tx[i] = dx / d;
+    ty[i] = dy / d;
+    nx[i] = -ty[i];
+    ny[i] = tx[i];
+    if (i) ropeLen += Math.hypot(P[i].x - P[i - 1].x, P[i].y - P[i - 1].y);
+  }
+  for (let i = 1; i < N - 1; i++) {
+    const ax = P[i].x - P[i - 1].x,
+      ay = P[i].y - P[i - 1].y,
+      bx = P[i + 1].x - P[i].x,
+      by = P[i + 1].y - P[i].y;
+    kap[i] = Math.atan2(ax * by - ay * bx, ax * bx + ay * by); // bend angle at this point
+  }
+  kap[0] = kap[N - 1] = 0;
+  const tension = clamp((ropeLen - L0) / GIVE, 0, 1);
+
+  // width: a twisted ribbon looks narrower; the clamp gathers the last few cm
+  for (let i = 0; i < N; i++) {
+    const s = i / (N - 1);
+    twI[i] = twist * s * s * (3 - 2 * s);
+    const gather = Math.max(0, 1 - (N - 1 - i) / 3.5);
+    halfW[i] =
+      (STRAP_W / 2) *
+      Math.max(0.12, Math.abs(Math.cos(twI[i]))) *
+      (1 - 0.18 * tension * gather);
+  }
+
+  let left = "",
+    center = "",
+    stL = "",
+    stR = "",
+    thr = "",
+    hi = "";
+  const rightPts = [];
+  for (let i = 0; i < N; i++) {
+    const p = P[i],
+      h = halfW[i],
+      n0 = nx[i],
+      n1 = ny[i];
+    const c = i ? "L" : "M";
+    left += `${c}${f(p.x + n0 * h)} ${f(p.y + n1 * h)}`;
+    rightPts.push(`${f(p.x - n0 * h)} ${f(p.y - n1 * h)}`);
+    center += `${c}${f(p.x)} ${f(p.y)}`;
+    stL += `${c}${f(p.x + n0 * (h - 4))} ${f(p.y + n1 * (h - 4))}`;
+    stR += `${c}${f(p.x - n0 * (h - 4))} ${f(p.y - n1 * (h - 4))}`;
+    thr += `${c}${f(p.x + n0 * (h - 7))} ${f(p.y + n1 * (h - 7))}`;
+    const sh = Math.sin(twI[i]) * h * 0.5; // highlight slides to the side that faces the light
+    hi += `${c}${f(p.x + n0 * sh)} ${f(p.y + n1 * sh)}`;
+  }
+  const right = "M" + rightPts.join("L");
+  const ribbon = left + "L" + rightPts.slice().reverse().join("L") + "Z";
+  ribbonEl.setAttribute("d", ribbon);
+  ribbonClipEl.setAttribute("d", ribbon);
+  centerEl.setAttribute("d", center);
+  shadeLEl.setAttribute("d", left);
+  shadeREl.setAttribute("d", right);
+  hiliteEl.setAttribute("d", hi);
+  sheenEl.setAttribute("d", center);
+  stitchLEl.setAttribute("d", stL);
+  stitchREl.setAttribute("d", stR);
+  threadEl.setAttribute("d", thr);
+
+  // creases: faint permanent micro-wrinkles + folds wherever the band bends
+  let cre = "";
+  for (let i = 1; i < N - 1; i++) {
+    const p = P[i],
+      h = halfW[i],
+      n0 = nx[i],
+      n1 = ny[i],
+      t0 = tx[i],
+      t1 = ty[i],
+      r = R[i];
+    if (r.a < 0.4) {
+      const side = r.b < 0.5 ? 1 : -1;
+      const len = h * (0.45 + r.c * 0.4);
+      const sx = p.x + n0 * side * h + t0 * (r.c - 0.5) * seg * 0.6,
+        sy = p.y + n1 * side * h + t1 * (r.c - 0.5) * seg * 0.6;
+      cre += fold(sx, sy, sx - n0 * side * len + t0 * (r.b - 0.5) * 3, sy - n1 * side * len + t1 * (r.b - 0.5) * 3, t0 * 0.7, t1 * 0.7, 0.42, 0.8);
+    }
+    const ak = Math.abs(kap[i]);
+    if (ak > 0.045) {
+      const o = Math.min(0.95, (ak - 0.045) * 7);
+      const inside =
+        Math.sign((tx[i + 1] - tx[i - 1]) * n0 + (ty[i + 1] - ty[i - 1]) * n1) || 1;
+      // main fold across the whole width, bowed toward the inside of the bend
+      const lx = p.x + n0 * h,
+        ly = p.y + n1 * h,
+        rx = p.x - n0 * h,
+        ry = p.y - n1 * h;
+      const cx = p.x + t0 * 2.5 * inside,
+        cy = p.y + t1 * 2.5 * inside;
+      const d = `M${f(lx)} ${f(ly)}Q${f(cx)} ${f(cy)} ${f(rx)} ${f(ry)}`;
+      cre += `<path d="${d}" stroke="rgba(0,0,0,${f(0.6 * o)})" stroke-width="1.2" transform="translate(${f(t0 * 0.9)} ${f(t1 * 0.9)})"/>`;
+      cre += `<path d="${d}" stroke="rgba(255,255,255,${f(0.38 * o)})" stroke-width=".9" transform="translate(${f(-t0 * 0.9)} ${f(-t1 * 0.9)})"/>`;
+      // the compressed edge puckers into smaller wrinkles
+      for (let j = 0; j < 2; j++) {
+        const jr = j ? r.b : r.c;
+        const ex = p.x + n0 * inside * h + t0 * (jr - 0.5) * seg * 0.9,
+          ey = p.y + n1 * inside * h + t1 * (jr - 0.5) * seg * 0.9;
+        const len = h * (0.45 + 0.4 * (j ? r.c : r.b));
+        const sk = (j ? 1 : -1) * 1.6;
+        cre += fold(ex, ey, ex - n0 * inside * len + t0 * sk, ey - n1 * inside * len + t1 * sk, t0 * 0.7, t1 * 0.7, o * 0.75, 0.8);
+      }
+    }
+  }
+  creasesEl.innerHTML = cre;
+
+  // fabric gathering into the crimp: always a little, a lot under tension
+  {
+    const e = end,
+      n0 = nx[N - 1],
+      n1 = ny[N - 1],
+      t0 = tx[N - 1],
+      t1 = ty[N - 1],
+      h = halfW[N - 1];
+    const o = 0.25 + 0.7 * tension;
+    const reach = 16 + 14 * tension;
+    let g = "";
+    for (const s of [-0.6, -0.25, 0.25, 0.6]) {
+      const x1 = e.x - t0 * reach + n0 * s * h,
+        y1 = e.y - t1 * reach + n1 * s * h;
+      const x2 = e.x - t0 * 2 + n0 * s * h * 0.45,
+        y2 = e.y - t1 * 2 + n1 * s * h * 0.45;
+      g += fold(x1, y1, x2, y2, n0 * 0.8, n1 * 0.8, o, 1);
+    }
+    // the band is folded back on itself and bar-tacked before it enters the crimp
+    const fx = e.x - t0 * 15,
+      fy = e.y - t1 * 15;
+    g += fold(fx + n0 * h, fy + n1 * h, fx - n0 * h, fy - n1 * h, t0 * 0.9, t1 * 0.9, 0.7, 1.1);
+    g += `<path d="M${f(fx + n0 * h)} ${f(fy + n1 * h)}L${f(e.x + n0 * h)} ${f(e.y + n1 * h)}L${f(e.x - n0 * h)} ${f(e.y - n1 * h)}L${f(fx - n0 * h)} ${f(fy - n1 * h)}Z" fill="rgba(0,0,0,.18)" stroke="none"/>`;
+    for (const d of [6, 9, 12]) {
+      const bx = e.x - t0 * d,
+        by = e.y - t1 * d;
+      g += `<path d="M${f(bx + n0 * h * 0.7)} ${f(by + n1 * h * 0.7)}L${f(bx - n0 * h * 0.7)} ${f(by - n1 * h * 0.7)}" stroke="rgba(220,220,235,.55)" stroke-width=".9" stroke-dasharray="1.4 1.4" stroke-linecap="butt"/>`;
+    }
+    gatherEl.innerHTML = g;
+    endShadeEl.setAttribute(
+      "d",
+      `M${f(P[N - 3].x)} ${f(P[N - 3].y)}L${f(e.x)} ${f(e.y)}`,
+    );
+    endShadeEl.setAttribute("stroke-opacity", f(0.3 + 0.35 * tension));
+  }
+
+  // texture + sheen follow the band's overall lean
+  const lean = (-Math.atan2(end.x, end.y) * 180) / Math.PI;
+  weaveEl.setAttribute("patternTransform", `rotate(${f(lean)})`);
+  fiberEl.setAttribute("transform", `rotate(${f(lean)})`);
+  const sPos = ((t * 0.9) % (L0 + 240)) - 120;
+  sheenGrad.setAttribute("y1", f(sPos - 50));
+  sheenGrad.setAttribute("y2", f(sPos + 50));
+  if (textPeriod > 0) textPathEl.setAttribute("startOffset", f(-textScroll));
+
+  // crimp follows the last bit of band; hook swings from its eyelet; card rocks on the hook
+  const phi = Math.atan2(end.x - P[N - 2].x, end.y - P[N - 2].y);
+  badge.style.transform = `translate(calc(-50% + ${f(end.x)}px), ${f(end.y)}px) rotate(${-phi}rad)`;
+  link.style.transform = `rotate(${alpha + phi}rad)`;
+  hanger.style.transform = `rotate(${theta - alpha}rad)`;
+  hook.style.transform = hookBack.style.transform = `perspective(140px) rotateY(${f(swivel)}deg)`;
+  // reflections slide across the barrel as the swivel turns
+  steelH.setAttribute("gradientTransform", `translate(${f(-swivel / 160)} 0)`);
+  cardPivot.style.transform = `rotate(${psi - theta}rad)`;
+  const tiltY = clamp(evxS * 2, -22, 22);
+  const tiltX = clamp(-evyS * 1.1, -10, 10);
+  card.style.transform = `translateX(${f(sx)}px) perspective(1200px) rotateX(${f(tiltX)}deg) rotateY(${f(tiltY)}deg)`;
+}
+
+function frame(now) {
+  const dt = Math.min((now - last) / (1000 / 60), 3);
+  last = now;
+  t += dt;
+
+  // fade the idle sway out while the card is moving, back in when it settles
+  const end = P[N - 1];
+  const active =
+    dragging ||
+    Math.hypot(evx, evy) > 0.3 ||
+    Math.hypot(end.x, end.y - L0) > 6;
+  idle += ((active || reduceMotion ? 0 : 1) - idle) * 0.03 * dt;
+
+  acc += dt;
+  let n = 0;
+  while (acc >= 1 && n < 3) {
+    step();
+    acc -= 1;
+    n++;
+  }
+  if (acc >= 1) acc = 0;
+
+  render();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+// ---------- Contact form (demo) ----------
+const form = document.getElementById("contactForm");
+const note = document.getElementById("formNote");
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(form));
+  // Hook this up to a PHP mailer or a service like Formspree / EmailJS.
+  console.log("Contact form:", data);
+  note.textContent = "Thanks! Your message has been noted (demo mode).";
+  form.reset();
+  setTimeout(() => (note.textContent = ""), 4000);
+});
+
+// ---------- Background: meteor shower + rising sparkles ----------
+(function backgroundFX() {
+  const canvas = document.getElementById("fx");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W = 0,
+    H = 0,
+    dpr = 1;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  // --- static stars ---
+  const stars = Array.from({ length: 90 }, () => ({
+    x: Math.random(),
+    y: Math.random(),
+    r: Math.random() * 1.1 + 0.3,
+    p: Math.random() * Math.PI * 2,
+  }));
+
+  // --- rising sparkles ---
+  const COLORS = ["#38bdf8", "#a855f7", "#ffffff", "#c4b5fd", "#67e8f9"];
+  const sparkles = [];
+  function newSparkle(randomY) {
+    return {
+      x: Math.random() * W,
+      y: randomY ? Math.random() * H : H + 10,
+      r: Math.random() * 1.8 + 0.6,
+      vy: -(Math.random() * 0.45 + 0.2),
+      sway: Math.random() * 1.2 + 0.4,
+      ph: Math.random() * Math.PI * 2,
+      tw: Math.random() * 0.05 + 0.02,
+      c: COLORS[(Math.random() * COLORS.length) | 0],
+    };
+  }
+  const SPARKLE_COUNT = Math.round(
+    Math.min(120, Math.max(50, (W * H) / 14000)),
+  );
+  for (let i = 0; i < SPARKLE_COUNT; i++) sparkles.push(newSparkle(true));
+
+  // --- meteors ---
+  const meteors = [];
+  let nextMeteor = 0;
+  function spawnMeteor() {
+    const speed = Math.random() * 9 + 9;
+    const angle = (Math.PI / 180) * (Math.random() * 10 + 30); // ~30-40deg down-left
+    meteors.push({
+      x: Math.random() * (W * 1.3) - W * 0.1 + W * 0.3,
+      y: -40 - Math.random() * H * 0.3,
+      vx: -Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      len: Math.random() * 160 + 120,
+      w: Math.random() * 1.4 + 0.8,
+      life: 1,
+      hue: Math.random() < 0.7 ? "56,189,248" : "196,181,253",
+    });
+  }
+
+  let t = 0,
+    last = performance.now();
+  function draw(now) {
+    const dt = Math.min((now - last) / (1000 / 60), 3);
+    last = now;
+    t += dt;
+    ctx.clearRect(0, 0, W, H);
+
+    // stars
+    for (const s of stars) {
+      const a = 0.35 + 0.35 * Math.sin(t * 0.03 + s.p);
+      ctx.fillStyle = `rgba(255,255,255,${a})`;
+      ctx.beginPath();
+      ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    if (!reduce) {
+      // sparkles
+      for (let i = 0; i < sparkles.length; i++) {
+        const p = sparkles[i];
+        p.y += p.vy * dt;
+        p.x += Math.sin(t * 0.02 + p.ph) * p.sway * 0.3 * dt;
+        p.ph += p.tw * dt;
+        if (p.y < -10) sparkles[i] = newSparkle(false);
+        const a = 0.35 + 0.65 * Math.abs(Math.sin(p.ph * 1.7));
+        ctx.globalAlpha = a;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = p.c;
+        ctx.fillStyle = p.c;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+
+      // meteors
+      if (now > nextMeteor) {
+        spawnMeteor();
+        if (Math.random() < 0.3) spawnMeteor(); // occasional pair
+        nextMeteor = now + 500 + Math.random() * 1400;
+      }
+      for (let i = meteors.length - 1; i >= 0; i--) {
+        const m = meteors[i];
+        m.x += m.vx * dt;
+        m.y += m.vy * dt;
+        if (m.y > H + m.len || m.x < -m.len) {
+          meteors.splice(i, 1);
+          continue;
+        }
+        const n = Math.hypot(m.vx, m.vy);
+        const tx = m.x - (m.vx / n) * m.len,
+          ty = m.y - (m.vy / n) * m.len;
+        const g = ctx.createLinearGradient(m.x, m.y, tx, ty);
+        g.addColorStop(0, `rgba(255,255,255,0.95)`);
+        g.addColorStop(0.15, `rgba(${m.hue},0.8)`);
+        g.addColorStop(1, `rgba(${m.hue},0)`);
+        ctx.strokeStyle = g;
+        ctx.lineWidth = m.w;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(m.x, m.y);
+        ctx.lineTo(tx, ty);
+        ctx.stroke();
+        // bright head
+        ctx.fillStyle = "rgba(255,255,255,0.95)";
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = `rgb(${m.hue})`;
+        ctx.beginPath();
+        ctx.arc(m.x, m.y, m.w * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+      requestAnimationFrame(draw);
+    }
+  }
+  requestAnimationFrame(draw);
+})();
