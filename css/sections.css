@@ -123,6 +123,11 @@
   color: var(--muted);
 }
 .ptag-hi { background: var(--text); border-color: var(--text); color: var(--bg); font-weight: 600; }
+/* Status pill for projects still in development: pulsing green dot */
+.ptag-status { display: inline-flex; align-items: center; gap: .4rem; color: #4ade80; border-color: rgba(74,222,128,.4); }
+.ptag-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: status-pulse 1.6s ease-in-out infinite; }
+@keyframes status-pulse { 50% { opacity: .3; } }
+@media (prefers-reduced-motion: reduce) { .ptag-status::before { animation: none; } }
 
 .thumb {
   aspect-ratio: 16 / 10;
