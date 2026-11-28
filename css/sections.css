@@ -10,6 +10,43 @@
 .section-head h1 { font-family: var(--pixel); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 400; }
 .contact-page { padding-top: calc(var(--nav-h) + 7rem); }
 
+/* Certifications */
+.certs { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
+.cert {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 1.8rem 1.2rem 1.5rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: border-color .2s;
+}
+.cert:hover { border-color: #3a3a3a; }
+.cert-icon {
+  display: grid; place-items: center;
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+.cert-icon svg { width: 22px; height: 22px; fill: none; stroke: var(--text); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.cert-icon:has(img) { background: #fff; }   /* issuer logos read best on white */
+.cert-icon img { width: 26px; height: 26px; object-fit: contain; }
+.cert h3 { font-size: 1.05rem; font-weight: 600; }
+.cert-issuer, .cert-meta { font-family: var(--mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.cert-issuer { margin-top: .4rem; }
+.cert-meta { margin-top: .2rem; letter-spacing: .06em; color: #6b6b6b; }
+.cert-link {
+  margin-top: 1.1rem;
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text);
+  transition: opacity .2s;
+}
+.cert-link:hover { opacity: .7; }
+
 /* GitHub contributions: one dot per day, columns = weeks; githubGraph.js fills the grid */
 .gh-grid {
   display: grid;
