@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="css/base.css?v=7">
   <link rel="stylesheet" href="css/sidebar.css?v=7">
   <link rel="stylesheet" href="css/hero.css?v=7">
-  <link rel="stylesheet" href="css/sections.css?v=7">
+  <link rel="stylesheet" href="css/sections.css?v=8">
   <link rel="stylesheet" href="css/responsive.css?v=7">
 </head>
 
@@ -129,6 +129,13 @@
           </div>
           <p class="form-note field-wide" id="formNote" role="status"></p>
         </div>
+
+        <div class="inquiry-sent" id="formSent" hidden>
+          <svg class="sent-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m8 12.5 2.8 2.8L16 10" /></svg>
+          <h3 tabindex="-1">Message sent</h3>
+          <p>Thanks, <strong id="sentName"></strong>. Your inquiry reached my inbox. I'll reply to <strong id="sentEmail"></strong> as soon as I can.</p>
+          <button type="button" class="btn-ghost" id="sendAnother">Send another inquiry</button>
+        </div>
       </form>
     </section>
 
@@ -141,7 +148,7 @@
   <script src="js/year.js?v=7"></script>
   <script src="js/navbar.js?v=7"></script>
   <script src="js/revealOnScroll.js?v=7"></script>
-  <script src="js/contactForm.js?v=8"></script>
+  <script src="js/contactForm.js?v=9"></script>
 </body>
 
 </html>

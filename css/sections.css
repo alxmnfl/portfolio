@@ -332,3 +332,24 @@
   color: var(--muted);
 }
 .back-top:hover { color: var(--text); }
+
+/* Inquiry success panel (shown after a confirmed send) */
+.inquiry-sent { padding: 3rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: .8rem; }
+.inquiry-body[hidden], .inquiry-sent[hidden] { display: none; }
+.sent-icon { width: 48px; height: 48px; fill: none; stroke: #22c55e; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.inquiry-sent h3 { font-family: var(--pixel); font-size: 1.25rem; font-weight: 400; outline: none; }
+.inquiry-sent p { max-width: 48ch; font-size: .95rem; color: var(--muted); }
+.inquiry-sent strong { color: var(--text); font-weight: 500; word-break: break-word; }
+.btn-ghost {
+  margin-top: .6rem;
+  padding: .7rem 1.2rem;
+  border: 1px solid #333;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: .9rem;
+  cursor: pointer;
+  transition: border-color .2s;
+}
+.btn-ghost:hover { border-color: var(--muted); }

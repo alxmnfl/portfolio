@@ -6,6 +6,23 @@ const WEB3FORMS_ACCESS_KEY = "2771b663-8e1a-4579-894f-5b354f64ae0b";
 const form = document.getElementById("contactForm");
 const note = document.getElementById("formNote");
 const sendBtn = form.querySelector(".btn-send");
+const body = form.querySelector(".inquiry-body");
+const sent = document.getElementById("formSent");
+
+function showSent(name, email) {
+  document.getElementById("sentName").textContent = name;
+  document.getElementById("sentEmail").textContent = email;
+  body.hidden = true;
+  sent.hidden = false;
+  sent.querySelector("h3").focus();
+}
+
+document.getElementById("sendAnother").addEventListener("click", () => {
+  sent.hidden = true;
+  body.hidden = false;
+  note.textContent = "";
+  form.querySelector("input[name='name']").focus();
+});
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -36,9 +53,9 @@ form.addEventListener("submit", async (e) => {
     if (!res.ok || !result.success)
       throw new Error(result.message || "Request failed");
 
-    note.textContent =
-      "Thanks! Your message was sent. I'll get back to you soon.";
+    note.textContent = "";
     form.reset();
+    showSent(data.name, data.email);
   } catch (err) {
     console.error("Contact form error:", err);
     note.textContent =
