@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collaboration — Alexander Monfiel</title>
+  <meta name="description" content="Portfolio of Alexander V. Monfiel, PHP and Laravel web developer">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css?v=7">
+  <link rel="stylesheet" href="css/sidebar.css?v=7">
+  <link rel="stylesheet" href="css/hero.css?v=7">
+  <link rel="stylesheet" href="css/sections.css?v=7">
+  <link rel="stylesheet" href="css/responsive.css?v=7">
+</head>
+
+<body>
+  <!-- MOBILE TOP BAR -->
+  <header class="topbar">
+    <a href="index.html#home" class="side-name">Alexander Monfiel</a>
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html#home" class="side-name">Alexander Monfiel</a>
+
+    <nav class="side-nav" id="navLinks" aria-label="Sections">
+      <a href="index.html#home">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="M9 22V12h6v10" /></svg>
+        Home</a>
+      <a href="index.html#about">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>
+        About</a>
+      <a href="index.html#projects">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
+        Projects</a>
+      <a href="index.html#stack">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 10 5-10 5L2 7z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" /></svg>
+        Stack</a>
+      <a href="index.html#github">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
+        GitHub</a>
+      <a href="contact.html" class="nav-gap active" aria-current="page">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+        Collaboration</a>
+    </nav>
+
+    <div class="side-bottom">
+      <span class="status"><i></i>Open for freelance</span>
+      <div class="side-socials">
+        <a href="https://github.com/alxmnfl" target="_blank" rel="noopener">github <span aria-hidden="true">&#8599;</span></a>
+        <a href="https://www.linkedin.com/in/alex-monfiel-058408385/" target="_blank" rel="noopener">linkedin <span aria-hidden="true">&#8599;</span></a>
+        <a href="https://www.instagram.com/xndr.mf/" target="_blank" rel="noopener">instagram <span aria-hidden="true">&#8599;</span></a>
+      </div>
+      <p class="side-reach">For work, collabs &amp; everything else, reach me at</p>
+      <a class="side-mail" href="mailto:alexmonfiel@gmail.com">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 6-10 7L2 6" /></svg>
+        alexmonfiel@gmail.com</a>
+    </div>
+  </aside>
+
+  <main class="page">
+    <section id="contact" class="section contact-page">
+      <div class="section-head">
+        <h1>collaboration</h1>
+      </div>
+
+      <form class="inquiry reveal" id="contactForm">
+        <header class="inquiry-head">
+          <span class="inquiry-eyebrow">Collaboration inquiry</span>
+          <h2>tell me about it</h2>
+          <p>Share the essentials and I'll reply with next steps. The more context you include, the more useful my first response can be.</p>
+          <svg class="inquiry-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path d="M8 9h8M8 13h5" /></svg>
+        </header>
+
+        <div class="inquiry-body">
+          <div class="field">
+            <label for="f-name">Name <i aria-hidden="true">*</i></label>
+            <input id="f-name" type="text" name="name" placeholder="Your name" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="f-email">Email <i aria-hidden="true">*</i></label>
+            <input id="f-email" type="email" name="email" placeholder="you@company.com" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="f-company">Company / Organization</label>
+            <input id="f-company" type="text" name="company" placeholder="Optional" autocomplete="organization">
+          </div>
+          <div class="field">
+            <label for="f-project">Project <i aria-hidden="true">*</i></label>
+            <input id="f-project" type="text" name="project" placeholder="e.g. Inventory system, REST API, admin dashboard" required>
+          </div>
+          <div class="field">
+            <label for="f-budget">Budget range</label>
+            <select id="f-budget" name="budget">
+              <option value="">Select one (optional)</option>
+              <option>Under $500</option>
+              <option>$500 – $1,000</option>
+              <option>$1,000 – $3,000</option>
+              <option>$3,000+</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-timeline">Ideal timeline</label>
+            <input id="f-timeline" type="text" name="timeline" placeholder="e.g. October, next quarter, flexible">
+          </div>
+          <div class="field field-wide">
+            <label for="f-details">Project details <i aria-hidden="true">*</i></label>
+            <textarea id="f-details" name="message" rows="6" placeholder="What are you working on, who is it for, and what would a successful outcome look like?" required></textarea>
+            <small>Please don't include passwords, API keys, or other sensitive information.</small>
+          </div>
+
+          <div class="inquiry-foot field-wide">
+            <p>Prefer email? <a href="mailto:alexmonfiel@gmail.com">alexmonfiel@gmail.com</a></p>
+            <button type="submit" class="btn-send">Send inquiry <span aria-hidden="true">&rarr;</span></button>
+          </div>
+          <p class="form-note field-wide" id="formNote" role="status"></p>
+        </div>
+      </form>
+    </section>
+
+    <footer class="footer">
+      <p>&copy; <span id="year"></span> Alexander V. Monfiel</p>
+      <a href="index.html" class="back-top">&larr; Back home</a>
+    </footer>
+  </main>
+
+  <script src="js/year.js?v=7"></script>
+  <script src="js/navbar.js?v=7"></script>
+  <script src="js/revealOnScroll.js?v=7"></script>
+  <script src="js/contactForm.js?v=7"></script>
+</body>
+
+</html>

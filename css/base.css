@@ -2,30 +2,41 @@
    THEME
    =========================== */
 :root {
-  --bg: #050816;
-  --bg-2: #0b1022;
-  --surface: rgba(255, 255, 255, 0.04);
-  --border: rgba(255, 255, 255, 0.08);
-  --text: #e5e7eb;
-  --muted: #94a3b8;
-  --primary: #6366f1;
-  --primary-2: #22d3ee;
-  --accent: #a78bfa;
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --surface-2: #1b1b1b;
+  --border: #242424;
+  --text: #ededed;
+  --muted: #8b8b8b;
   --font: "Inter", system-ui, -apple-system, Segoe UI, sans-serif;
-  --display: "Space Grotesk", var(--font);
-  --radius: 14px;
-  --nav-h: 72px;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  --pixel: "Geist Pixel", var(--mono);        /* section headings */
+  --side-w: 260px;
+  --nav-h: 0px;                               /* height of the mobile top bar (set in responsive.css) */
+  --content-w: 820px;
+}
+
+/* Geist Pixel by Vercel (SIL OFL), served from jsDelivr */
+@font-face {
+  font-family: "Geist Pixel";
+  src: url("https://cdn.jsdelivr.net/gh/vercel/geist-pixel-font@main/fonts/webfonts/GeistPixel-Square.woff2") format("woff2");
+  font-display: swap;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: clamp(16px, 1.15vw, 19px); }
+html { scroll-behavior: smooth; font-size: clamp(15px, 1vw, 17px); }
 body {
   font-family: var(--font);
-  background: radial-gradient(1200px 600px at 80% -10%, #141a3a 0%, var(--bg) 55%);
+  background-color: var(--bg);
+  background-image: radial-gradient(rgba(255, 255, 255, .06) 1px, transparent 1px);
+  background-size: 22px 22px;
   color: var(--text);
   line-height: 1.6;
   overflow-x: hidden;
 }
 a { color: inherit; text-decoration: none; }
 img, svg { display: block; max-width: 100%; }
+:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
 
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.in { opacity: 1; transform: none; }

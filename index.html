@@ -4,414 +4,174 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Portfolio</title>
+  <title>Alexander Monfiel — Back-End Web Developer</title>
   <meta name="description" content="Portfolio of Alexander V. Monfiel, PHP and Laravel web developer">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Bebas+Neue&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/base.css?v=6">
-  <link rel="stylesheet" href="css/navbar.css?v=6">
-  <link rel="stylesheet" href="css/hero.css?v=6">
-  <link rel="stylesheet" href="css/lanyard.css?v=6">
-  <link rel="stylesheet" href="css/backgroundFx.css?v=6">
-  <link rel="stylesheet" href="css/sections.css?v=6">
-  <link rel="stylesheet" href="css/responsive.css?v=6">
+  <link rel="stylesheet" href="css/base.css?v=7">
+  <link rel="stylesheet" href="css/sidebar.css?v=7">
+  <link rel="stylesheet" href="css/hero.css?v=7">
+  <link rel="stylesheet" href="css/sections.css?v=7">
+  <link rel="stylesheet" href="css/responsive.css?v=7">
 </head>
 
 <body>
-  <canvas id="fx" aria-hidden="true"></canvas>
-
-  <!-- NAVBAR -->
-  <header class="nav">
-    <a href="#home" class="logo">Alexander<span>.</span></a>
-    <nav class="nav-links" id="navLinks">
-      <a href="#home" class="active">Home</a>
-      <a href="#about">About</a>
-      <a href="#portfolio">Portfolio</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <button class="burger" id="burger" aria-label="Open menu">
+  <!-- MOBILE TOP BAR -->
+  <header class="topbar">
+    <a href="#home" class="side-name">Alexander Monfiel</a>
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
       <span></span><span></span><span></span>
     </button>
   </header>
 
-  <!-- HERO -->
-  <section id="home" class="hero">
-    <div class="glow glow-1"></div>
-    <div class="glow glow-2"></div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <a href="#home" class="side-name">Alexander Monfiel</a>
 
-    <div class="hero-text">
-      <h1 class="title">
-        <span class="line gradient">Welcome to</span>
-        <span class="line">My Portfolio</span>
-      </h1>
-      <p class="role"><span id="typed">Web Developer</span><span class="cursor">|</span></p>
-      <p class="desc">
-        I build reliable web applications with PHP, Laravel and MySQL, backed by
-        clean REST APIs. From database design to deployment, I turn ideas into
-        products people can depend on.
-      </p>
-      <div class="actions">
-        <a href="#portfolio" class="btn btn-primary">View Projects</a>
-        <a href="#contact" class="btn btn-ghost">Contact Me</a>
-      </div>
-      <div class="socials">
-        <a href="https://github.com/alxmnfl" aria-label="GitHub">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.3-.52-1.47.11-3.06 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.06.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.2.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z" />
-          </svg>
-        </a>
-        <a href="https://www.linkedin.com/in/alex-monfiel-058408385/" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
-          </svg>
-        </a>
-        <a href="https://www.instagram.com/xndr.mf/" aria-label="Instagram">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85C2.38 3.92 3.9 2.38 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zM12 0C8.74 0 8.33.01 7.05.07 2.7.27.27 2.69.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.36 2.62 6.78 6.98 6.98C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c4.35-.2 6.78-2.62 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.62-6.78-6.98-6.98C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.85a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z" />
-          </svg>
-        </a>
-        <a href="#" aria-label="X">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.4l-5.8-7.58-6.64 7.58H.47l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.49 3.24H4.3l13.31 17.41z" />
-          </svg>
-        </a>
-      </div>
-    </div>
-
-    <!-- LANYARD + ID CARD (drag to stretch, click to flip) -->
-    <div class="lanyard-wrap" id="lanyard">
-      <div class="lanyard" id="lanyardInner">
-        <!-- woven strap: an SVG ribbon drawn every frame from a rope simulation (script.js) -->
-        <svg class="strap-svg" id="strapSvg" aria-hidden="true">
-          <defs>
-            <!-- twill weave: weft rows + two diagonal thread directions -->
-            <pattern id="ln-weave" width="4" height="4" patternUnits="userSpaceOnUse">
-              <rect width="4" height="4" fill="#1a1a2e" />
-              <rect width="4" height="1" fill="#262646" />
-              <path d="M0 4L4 0" stroke="rgba(255,255,255,.11)" stroke-width="1" />
-              <path d="M0 0L4 4" stroke="rgba(0,0,0,.38)" stroke-width="1" />
-            </pattern>
-            <!-- loose fibres: ragged edges -->
-            <filter id="ln-fuzz" x="-50%" y="-10%" width="200%" height="120%">
-              <feTurbulence type="fractalNoise" baseFrequency=".15 .6" numOctaves="2" seed="7" result="n" />
-              <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G" />
-            </filter>
-            <!-- fibre streaks running along the band -->
-            <filter id="ln-fiber" x="0" y="0" width="100%" height="100%">
-              <feTurbulence type="fractalNoise" baseFrequency=".9 .22" numOctaves="2" seed="3" />
-              <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .6 -.18" />
-            </filter>
-            <filter id="ln-blur" x="-50%" y="-20%" width="200%" height="140%">
-              <feGaussianBlur stdDeviation="3" />
-            </filter>
-            <filter id="ln-blur2" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="5" />
-            </filter>
-            <filter id="ln-shadow" x="-150%" y="-20%" width="400%" height="160%">
-              <feDropShadow dx="0" dy="10" stdDeviation="7" flood-color="#000" flood-opacity=".55" />
-            </filter>
-            <!-- sheen band that slides down the fabric (y1/y2 moved by JS) -->
-            <linearGradient id="ln-sheen" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="100">
-              <stop offset="0" stop-color="#fff" stop-opacity="0" />
-              <stop offset=".5" stop-color="#fff" stop-opacity=".22" />
-              <stop offset="1" stop-color="#fff" stop-opacity="0" />
-            </linearGradient>
-            <!-- lettering fades where the band turns edge-on or gathers into the crimp (stops set by script.js),
-                 so letters are never squeezed or chopped by the band's edges -->
-            <linearGradient id="ln-textFade" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="100">
-              <stop offset="0" stop-color="#fff" />
-              <stop offset=".25" stop-color="#fff" />
-              <stop offset=".5" stop-color="#fff" />
-              <stop offset=".75" stop-color="#fff" />
-              <stop offset=".9" stop-color="#fff" />
-              <stop offset="1" stop-color="#fff" />
-            </linearGradient>
-            <mask id="ln-textMask" maskUnits="userSpaceOnUse" x="-600" y="-200" width="1200" height="2400">
-              <rect x="-600" y="-200" width="1200" height="2400" fill="url(#ln-textFade)" />
-            </mask>
-            <clipPath id="ln-clip">
-              <path id="ribbonClip" />
-            </clipPath>
-          </defs>
-          <g filter="url(#ln-shadow)">
-            <path id="ribbon" fill="url(#ln-weave)" filter="url(#ln-fuzz)" />
-          </g>
-          <g clip-path="url(#ln-clip)" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <rect id="fiberRect" x="-210" y="-30" width="420" height="300" filter="url(#ln-fiber)" opacity=".5"
-              style="mix-blend-mode:overlay" />
-            <!-- rounded tube shading: dark edges, lit centre -->
-            <path id="shadeL" stroke="#000" stroke-opacity=".6" stroke-width="18" filter="url(#ln-blur)" />
-            <path id="shadeR" stroke="#000" stroke-opacity=".6" stroke-width="18" filter="url(#ln-blur)" />
-            <path id="hilite" stroke="#fff" stroke-opacity=".13" stroke-width="10" filter="url(#ln-blur)" />
-            <path id="sheenPath" stroke="url(#ln-sheen)" stroke-width="40" style="mix-blend-mode:screen" />
-            <!-- edge stitching + red woven accent thread -->
-            <path id="stitchL" stroke="rgba(220,220,235,.55)" stroke-width="1" stroke-dasharray="3 4"
-              stroke-linecap="butt" />
-            <path id="stitchR" stroke="rgba(220,220,235,.55)" stroke-width="1" stroke-dasharray="3 4"
-              stroke-linecap="butt" />
-            <path id="redThread" stroke="rgba(239,68,68,.75)" stroke-width="2" stroke-linecap="butt" />
-            <g id="creases" />
-            <g id="gather" />
-            <path id="endShade" stroke="#000" stroke-width="44" filter="url(#ln-blur2)" />
-            <text class="strap-text" dominant-baseline="middle" mask="url(#ln-textMask)">
-              <textPath id="strapTextPath" href="#centerPath">WEB DEVELOPER&#8195;&#8195;WEB DEVELOPER&#8195;&#8195;WEB DEVELOPER&#8195;&#8195;WEB DEVELOPER&#8195;&#8195;WEB DEVELOPER&#8195;&#8195;WEB DEVELOPER&#8195;&#8195;</textPath>
-            </text>
-          </g>
-          <path id="centerPath" fill="none" />
+    <nav class="side-nav" id="navLinks" aria-label="Sections">
+      <a href="#home" class="active">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <path d="M9 22V12h6v10" />
         </svg>
-        <div class="badge" id="badge">
-          <!-- stainless crimp that clamps the band -->
-          <svg class="crimp-svg" viewBox="0 0 22 22" aria-hidden="true">
-            <defs>
-              <linearGradient id="ln-steelV" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#f8fafc" />
-                <stop offset=".22" stop-color="#cbd5e1" />
-                <stop offset=".45" stop-color="#6b7a90" />
-                <stop offset=".62" stop-color="#e2e8f0" />
-                <stop offset=".85" stop-color="#8a97aa" />
-                <stop offset="1" stop-color="#d7dee8" />
-              </linearGradient>
-              <pattern id="ln-brush" width="22" height="2" patternUnits="userSpaceOnUse">
-                <rect width="22" height="1" fill="rgba(255,255,255,.09)" />
-                <rect y="1" width="22" height="1" fill="rgba(0,0,0,.1)" />
-              </pattern>
-              <!-- fine surface imperfections, clipped to the metal shape -->
-              <filter id="ln-steelTex" x="-5%" y="-5%" width="110%" height="110%">
-                <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="11" result="n" />
-                <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .3 -.08"
-                  result="spec" />
-                <feComposite in="spec" in2="SourceGraphic" operator="in" result="tex" />
-                <feMerge>
-                  <feMergeNode in="SourceGraphic" />
-                  <feMergeNode in="tex" />
-                </feMerge>
-              </filter>
-            </defs>
-            <rect x=".5" y=".5" width="21" height="13.5" rx="2.5" fill="url(#ln-steelV)" stroke="rgba(15,23,42,.7)"
-              stroke-width=".6" filter="url(#ln-steelTex)" />
-            <rect x=".5" y=".5" width="21" height="13.5" rx="2.5" fill="url(#ln-brush)" />
-            <!-- pressed groove where the clamp bites the band -->
-            <path d="M3 9.5H19" stroke="rgba(15,23,42,.55)" stroke-width="1" />
-            <path d="M3 10.5H19" stroke="rgba(255,255,255,.45)" stroke-width=".6" />
-            <!-- neck + eyelet: the split ring hangs through this loop -->
-            <rect x="8.6" y="13.4" width="4.8" height="2.4" fill="url(#ln-steelV)" stroke="rgba(15,23,42,.6)"
-              stroke-width=".4" />
-            <circle cx="11" cy="17.6" r="3.1" fill="none" stroke="rgba(15,23,42,.7)" stroke-width="3.2" />
-            <circle cx="11" cy="17.6" r="3.1" fill="none" stroke="url(#ln-steelV)" stroke-width="2.2"
-              filter="url(#ln-steelTex)" />
-            <path d="M8.6 15.6A3.1 3.1 0 0 1 11 14.5" stroke="rgba(255,255,255,.8)" stroke-width=".6" fill="none"
-              stroke-linecap="round" />
-            <!-- interlock: the connecting ring comes back over the eyelet at the right-hand crossing.
-                 This piece of the ring is turned by script.js to follow the ring's swing about its contact (11,18.3) -->
-            <linearGradient id="ln-ringPatch" href="#ln-steelR" gradientUnits="userSpaceOnUse" x1="6" y1="18.3" x2="16"
-              y2="28.3" />
-            <g id="ringPatch" fill="none">
-              <path d="M12.55 18.54A5 5 0 0 1 14.6 19.83" stroke="rgba(15,23,42,.75)" stroke-width="3.6" />
-              <path d="M12.55 18.54A5 5 0 0 1 14.6 19.83" stroke="url(#ln-ringPatch)" stroke-width="2.6" />
-            </g>
-            <!-- top edge specular, a dent and a scratch -->
-            <path d="M2.5 1.6H19.5" stroke="rgba(255,255,255,.85)" stroke-width=".7" stroke-linecap="round" />
-            <circle cx="6" cy="5" r=".7" fill="rgba(0,0,0,.25)" />
-            <circle cx="5.7" cy="4.7" r=".35" fill="rgba(255,255,255,.6)" />
-            <path d="M12 3.2L17 6.8" stroke="rgba(255,255,255,.35)" stroke-width=".4" />
-          </svg>
-          <!-- link: connecting ring through the crimp eyelet (own pendulum) -->
-          <div class="link" id="link">
-          <svg class="link-svg" viewBox="0 0 14 14" aria-hidden="true">
-            <circle cx="7" cy="7" r="5" fill="none" stroke="rgba(15,23,42,.75)" stroke-width="3.6" />
-            <circle cx="7" cy="7" r="5" fill="none" stroke="url(#ln-steelR)" stroke-width="2.6"
-              filter="url(#ln-steelTex)" />
-            <circle cx="7" cy="7" r="3.5" fill="none" stroke="rgba(0,0,0,.5)" stroke-width=".5" />
-            <path d="M3.4 5.6A4.2 4.2 0 0 1 5.6 3.4" stroke="#fff" stroke-width=".9" stroke-linecap="round"
-              fill="none" opacity=".9" />
-            <path d="M10.6 8.6A4.2 4.2 0 0 1 8.6 10.6" stroke="rgba(255,255,255,.5)" stroke-width=".6"
-              stroke-linecap="round" fill="none" />
-            <!-- interlock: the swivel eye comes back over the ring at the left-hand crossing.
-                 This piece of the eye is turned by script.js to follow the hook's swing about the eye (7,12.3) -->
-            <linearGradient id="ln-eyePatch" href="#ln-steelR" gradientUnits="userSpaceOnUse" x1="4.6" y1="9.9" x2="9.4"
-              y2="14.7" />
-            <g id="eyePatch" fill="none">
-              <path d="M4.6 12.3A2.4 2.4 0 0 1 5.3 10.6" stroke="rgba(15,23,42,.7)" stroke-width="2.2" />
-              <path d="M4.6 12.3A2.4 2.4 0 0 1 5.3 10.6" stroke="url(#ln-eyePatch)" stroke-width="1.6" />
-            </g>
-          </svg>
-          <!-- hanger: swivel barrel + snap hook hanging from the ring (own pendulum, spins on its axis) -->
-          <div class="hanger" id="hanger">
-          <svg class="hook-svg" viewBox="0 0 22 40" aria-hidden="true">
-            <defs>
-              <linearGradient id="ln-steelR" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#ffffff" />
-                <stop offset=".15" stop-color="#d5dde8" />
-                <stop offset=".32" stop-color="#5b6b82" />
-                <stop offset=".48" stop-color="#eef2f7" />
-                <stop offset=".64" stop-color="#94a3b8" />
-                <stop offset=".8" stop-color="#3f4b5e" />
-                <stop offset="1" stop-color="#cfd8e3" />
-              </linearGradient>
-              <linearGradient id="ln-steelH" x1="0" y1="0" x2="1" y2="0" spreadMethod="repeat">
-                <stop offset="0" stop-color="#4b5869" />
-                <stop offset=".3" stop-color="#f1f5f9" />
-                <stop offset=".55" stop-color="#94a3b8" />
-                <stop offset=".8" stop-color="#e2e8f0" />
-                <stop offset="1" stop-color="#55637a" />
-              </linearGradient>
-            </defs>
-            <!-- swivel eye: the connecting ring passes through here -->
-            <circle cx="11" cy="4.2" r="2.4" fill="none" stroke="rgba(15,23,42,.7)" stroke-width="2.2" />
-            <circle cx="11" cy="4.2" r="2.4" fill="none" stroke="url(#ln-steelR)" stroke-width="1.6" />
-            <!-- swivel barrel: spins around the vertical axis -->
-            <rect x="7.5" y="5.5" width="7" height="9" rx="1.6" fill="url(#ln-steelH)" stroke="rgba(15,23,42,.7)"
-              stroke-width=".5" filter="url(#ln-steelTex)" />
-            <rect x="7.5" y="5.5" width="7" height="9" rx="1.6" fill="url(#ln-brush)" />
-            <path d="M7.8 9.5H14.2" stroke="rgba(15,23,42,.55)" stroke-width=".7" />
-            <path d="M7.8 10.2H14.2" stroke="rgba(255,255,255,.45)" stroke-width=".5" />
-            <rect x="9.6" y="14" width="2.8" height="2.4" fill="url(#ln-steelH)" stroke="rgba(15,23,42,.6)"
-              stroke-width=".4" />
-            <!-- hook: a J whose plane stands square to the card. Its legs, gate and the part of the curve inside
-                 the slot are redrawn every frame by script.js from the card's turn angle, so the hook turns with
-                 the card. The curve threads the slot and bears on its top edge (y=33; card top edge is y=21).
-                 Leg A always lies on the card's front side, leg B on its back side; whichever faces the viewer
-                 is stacked over the card, the other under it. -->
-            <filter id="ln-hookCast" x="-100%" y="-20%" width="300%" height="140%">
-              <feGaussianBlur stdDeviation=".75" />
-            </filter>
-            <clipPath id="ln-inSlot">
-              <rect x="-10" y="33" width="42" height="20" />
-            </clipPath>
-            <!-- spring gate: closes above the card's top edge -->
-            <path id="hkGateO" stroke="rgba(15,23,42,.7)" stroke-width="2.2" stroke-linecap="round" />
-            <path id="hkGate" stroke="url(#ln-steelH)" stroke-width="1.4" stroke-linecap="round" />
-            <!-- the curve inside the slot opening: visible from either side; the half heading away is in shade -->
-            <g clip-path="url(#ln-inSlot)" fill="none">
-              <path id="hkSlotO" stroke="rgba(15,23,42,.75)" stroke-width="4.4" />
-              <path id="hkSlot" stroke="url(#ln-steelR)" stroke-width="3.4" />
-              <path id="hkSlotFar" stroke="rgba(0,0,0,.55)" stroke-width="3.6" />
-            </g>
-            <!-- contact: the slot's top edge bears on the inside of the curve -->
-            <path id="hkContact" fill="none" stroke="rgba(0,0,0,.6)" stroke-width=".7" stroke-linecap="round" />
-          </svg>
-          <!-- leg A (card-front side) and leg B (card-back side) of the hook -->
-          <svg class="hook-svg hook-leg" id="hookA" viewBox="0 0 22 40" aria-hidden="true">
-            <path class="hk-cast" stroke="rgba(10,14,30,.42)" stroke-width="2.8" stroke-linecap="round"
-              filter="url(#ln-hookCast)" />
-            <path class="hk-cast-tight" stroke="rgba(10,14,30,.4)" stroke-width="1.6" stroke-linecap="round" />
-            <path class="hk-body" fill="none" stroke="rgba(15,23,42,.75)" stroke-width="4.4" stroke-linecap="round"
-              stroke-linejoin="round" />
-            <path class="hk-body" fill="none" stroke="url(#ln-steelR)" stroke-width="3.4" stroke-linecap="round"
-              stroke-linejoin="round" filter="url(#ln-steelTex)" />
-            <path class="hk-spec" stroke="rgba(255,255,255,.75)" stroke-width=".6" stroke-linecap="round" />
-          </svg>
-          <svg class="hook-svg hook-leg" id="hookB" viewBox="0 0 22 40" aria-hidden="true">
-            <path class="hk-cast" stroke="rgba(10,14,30,.42)" stroke-width="2.8" stroke-linecap="round"
-              filter="url(#ln-hookCast)" />
-            <path class="hk-cast-tight" stroke="rgba(10,14,30,.4)" stroke-width="1.6" stroke-linecap="round" />
-            <path class="hk-body" fill="none" stroke="rgba(15,23,42,.75)" stroke-width="4.4" stroke-linecap="round"
-              stroke-linejoin="round" />
-            <path class="hk-body" fill="none" stroke="url(#ln-steelR)" stroke-width="3.4" stroke-linecap="round"
-              stroke-linejoin="round" filter="url(#ln-steelTex)" />
-            <path class="hk-spec" stroke="rgba(255,255,255,.75)" stroke-width=".6" stroke-linecap="round" />
-          </svg>
-          <!-- pivot = where the slot rests on the hook; the card rocks and slides here -->
-          <div class="card-pivot" id="cardPivot">
-          <div class="card" id="card">
-            <div class="card-inner" id="cardInner">
+        Home</a>
+      <a href="#about">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 21a8 8 0 0 1 16 0" />
+        </svg>
+        About</a>
+      <a href="#projects">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        </svg>
+        Projects</a>
+      <a href="#stack">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m12 2 10 5-10 5L2 7z" />
+          <path d="m2 17 10 5 10-5" />
+          <path d="m2 12 10 5 10-5" />
+        </svg>
+        Stack</a>
+      <a href="#github">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+          <path d="M9 18c-4.51 2-5-2-7-2" />
+        </svg>
+        GitHub</a>
+      <a href="contact.html" class="nav-gap">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+        Collabs</a>
+    </nav>
 
-              <!-- FRONT -->
-              <div class="card-face card-front">
-                <div class="slot"></div>
-                <div class="top-row">
-                  <span class="pill">PORTFOLIO 2026</span>
-                  <div class="logos">
-                    <span class="logo-mark"><b>AM</b><i>studio</i></span>
-                    <span class="logo-round"><b>&lt;/&gt;</b></span>
-                  </div>
-                </div>
-                <div class="headline-frame">
-                  <h2 class="headline">WEB DEV</h2>
-                  <span class="sticker">original</span>
-                </div>
-                <div class="main">
-                  <div class="photo-panel">
-                    <img src="assets/photo.png" alt="Alexander V. Monfiel" draggable="false">
-                    <span class="name-tag">ALEXANDER</span>
-                  </div>
-                  <div class="vert-frame">
-                    <span class="vert-text">MONFIEL</span>
-                  </div>
-                </div>
-                <div class="band">
-                  <span class="band-title">DEVELOPER</span>
-                  <span class="spiral" aria-hidden="true"></span>
-                  <span class="band-info">Based in the Philippines<br>Open for freelance</span>
-                </div>
-                <span class="grain" aria-hidden="true"></span>
-                <span class="gloss" aria-hidden="true"></span>
-              </div>
+    <div class="side-bottom">
+      <span class="status"><i></i>Open for freelance</span>
+      <div class="side-socials">
+        <a href="https://github.com/alxmnfl" target="_blank" rel="noopener">github <span
+            aria-hidden="true">&#8599;</span></a>
+        <a href="https://www.linkedin.com/in/alex-monfiel-058408385/" target="_blank" rel="noopener">linkedin <span
+            aria-hidden="true">&#8599;</span></a>
+        <a href="https://www.instagram.com/xndr.mf/" target="_blank" rel="noopener">instagram <span
+            aria-hidden="true">&#8599;</span></a>
+      </div>
+      <p class="side-reach">For work, collabs &amp; everything else, reach me at</p>
+      <a class="side-mail" href="mailto:alexmonfiel@gmail.com">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="2" y="4" width="20" height="16" rx="2" />
+          <path d="m22 6-10 7L2 6" />
+        </svg>
+        alexmonfiel@gmail.com</a>
+    </div>
+  </aside>
 
-              <!-- BACK -->
-              <div class="card-face card-back">
-                <div class="slot"></div>
-                <div class="top-row">
-                  <span class="pill">CONNECT</span>
-                  <div class="logos">
-                    <span class="logo-mark"><b>AM</b><i>studio</i></span>
-                    <span class="logo-round logo-fb">
-                      <svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path
-                          d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.49h-2.8V24C19.62 23.1 24 18.1 24 12.07z" />
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-                <div class="headline-frame">
-                  <h2 class="headline">SCAN <span class="amp">&amp;</span> ADD</h2>
-                  <span class="sticker">scan me</span>
-                </div>
-                <div class="main">
-                  <div class="photo-panel qr-panel">
-                    <div id="qr" class="qr"></div>
-                    <span class="name-tag">ALEXANDER V.</span>
-                  </div>
-                  <div class="vert-frame">
-                    <span class="vert-text">FACEBOOK</span>
-                  </div>
-                </div>
-                <div class="band">
-                  <span class="band-title">SOCIALS</span>
-                  <span class="spiral" aria-hidden="true"></span>
-                  <span class="band-info" id="fbUrlText"></span>
-                </div>
-                <span class="grain" aria-hidden="true"></span>
-                <span class="gloss" aria-hidden="true"></span>
-              </div>
+  <main class="page">
+    <!-- HERO -->
+    <section id="home" class="hero">
+      <div class="portrait">
+        <img src="assets/photo.png" alt="Portrait of Alexander Monfiel" width="480" height="549" data-dither>
+      </div>
 
-            </div>
-          </div>
-          </div>
-          </div>
-          </div>
+      <div class="hero-text">
+        <h1 class="hero-name">Alexander Monfiel</h1>
+        <p class="hero-bio">
+          I'm a
+          <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m16 18 6-6-6-6" />
+              <path d="m8 6-6 6 6 6" />
+            </svg>back-end</span>
+          developer. I build reliable
+          <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="2" y="3" width="20" height="14" rx="2" />
+              <path d="M8 21h8M12 17v4" />
+            </svg>web apps</span>
+          &amp;
+          <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1M16 21h1a2 2 0 0 0 2-2v-5a2 2 0 0 1 2-2 2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1" />
+            </svg>REST APIs</span>,
+          and these days I ship faster with
+          <span class="chip chip-ai"><i class="ai ic-claude"><svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="m4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z" />
+              </svg></i><i class="ai ic-gemini"><svg viewBox="0 0 24 24" aria-hidden="true">
+
+                <path
+                  d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" />
+              </svg></i><i class="ai ic-openai"><svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z" />
+              </svg></i></span>
+          <strong>AI tools</strong>.
+        </p>
+        <p class="hero-bio">
+          Right now I'm building
+          <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <ellipse cx="12" cy="5" rx="9" ry="3" />
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+              <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3" />
+            </svg>sales &amp; inventory systems</span>
+          for real businesses. I love turning
+          <span class="chip"><svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+            </svg>rough ideas</span>
+          into products people can depend on.
+        </p>
+        <div class="hero-links">
+          <a href="https://github.com/alxmnfl" target="_blank" rel="noopener">github <span
+              aria-hidden="true">&#8599;</span></a>
+          <a href="https://www.linkedin.com/in/alex-monfiel-058408385/" target="_blank" rel="noopener">linkedin <span
+              aria-hidden="true">&#8599;</span></a>
+          <a href="https://www.instagram.com/xndr.mf/" target="_blank" rel="noopener">instagram <span
+              aria-hidden="true">&#8599;</span></a>
         </div>
       </div>
-      <p class="lanyard-hint">Drag the card &middot; Click to flip</p>
+    </section>
+
+    <div class="strip reveal">
+      <div><b>PHP</b><span>Laravel &middot; MySQL</span></div>
+      <div><b>Philippines</b><span>Based in</span></div>
+      <div><b>Freelance</b><span>Open for work</span></div>
+    </div>
+    <div class="stats reveal">
+      <div><strong>3+ yrs</strong><span>Experience</span></div>
+      <div><strong>4+</strong><span>Projects done</span></div>
+      <div><strong>3+</strong><span>Happy clients</span></div>
     </div>
 
-    <a href="#about" class="scroll-hint" aria-label="Scroll down"><span></span></a>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about" class="section">
-    <div class="section-head">
-      <span class="eyebrow">About</span>
-      <h2>Who I am</h2>
-    </div>
-    <div class="about-grid">
-      <div class="about-text reveal">
+    <!-- ABOUT -->
+    <section id="about" class="section">
+      <div class="section-head">
+        <h2><span class="num">01</span> &mdash; about</h2>
+      </div>
+      <div class="about reveal">
         <p>
           I am Alexander Monfiel, I'm a web developer focused on the back end. I build solid, maintainable
           applications with PHP and Laravel, design clean MySQL schemas, and expose them
@@ -421,21 +181,93 @@
           I work in VS Code with Git and GitHub, and I pair with AI tools like Claude, Gemini
           and Codex to move faster without cutting corners on quality.
         </p>
-        <div class="stats">
-          <div><strong>3+</strong><span>Years Experience</span></div>
-          <div><strong>4+</strong><span>Projects Done</span></div>
-          <div><strong>3+</strong><span>Happy Clients</span></div>
-        </div>
       </div>
-      <div class="skills reveal">
-        <h3>Tech Stack</h3>
-        <ul>
-          <li><span>PHP</span><i style="--w:92%"></i></li>
-          <li><span>Laravel</span><i style="--w:88%"></i></li>
-          <li><span>MySQL</span><i style="--w:85%"></i></li>
-          <li><span>REST APIs</span><i style="--w:86%"></i></li>
-        </ul>
-        <h3 class="skills-sub">Tools &amp; AI</h3>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="section">
+      <div class="section-head">
+        <h2><span class="num">02</span> &mdash; projects</h2>
+        <a href="https://github.com/alxmnfl" target="_blank" rel="noopener" class="head-link">All on GitHub <span
+            aria-hidden="true">&rarr;</span></a>
+      </div>
+
+      <div class="fan reveal" data-fan>
+        <article class="fan-card">
+          <div class="pills"><span class="ptag ptag-hi">Featured</span><span class="ptag">Multi-branch</span><span
+              class="ptag">2FA</span></div>
+          <div class="gallery" data-gallery><img class="gallery-slide active" src="assets/projects/adminDashboard.png"
+              alt="Admin dashboard"><img class="gallery-slide" src="assets/projects/posCheckout.png" alt="POS cart"
+              loading="lazy"><img class="gallery-slide" src="assets/projects/posPayment.png" alt="POS checkout"
+              loading="lazy"><img class="gallery-slide" src="assets/projects/adminInventory.png"
+              alt="Inventory management" loading="lazy"><img class="gallery-slide"
+              src="assets/projects/branchTransfers.png" alt="Inter-branch transfers" loading="lazy">
+            <div class="gallery-dots"><button type="button" class="gallery-dot active"
+                aria-label="Show Admin dashboard"></button><button type="button" class="gallery-dot"
+                aria-label="Show POS cart"></button><button type="button" class="gallery-dot"
+                aria-label="Show POS checkout"></button><button type="button" class="gallery-dot"
+                aria-label="Show Inventory management"></button><button type="button" class="gallery-dot"
+                aria-label="Show Inter-branch transfers"></button></div>
+          </div>
+          <h3>Web-Based Sales and Inventory Management</h3>
+          <p>Multi-branch POS and admin console for a hydraulics retailer: sales, inventory, transfers, reports,
+            forecasting and 2FA.</p>
+          <ul class="tech">
+            <li><img src="assets/tech/php.svg" alt="" loading="lazy"><span>PHP</span></li>
+            <li><img src="assets/tech/mysql.svg" alt="" loading="lazy"><span>MySQL</span></li>
+            <li><img src="assets/tech/javascript.svg" alt="" loading="lazy"><span>JavaScript</span></li>
+            <li><img src="assets/tech/chartdotjs.svg" alt="" loading="lazy"><span>Chart.js</span></li>
+            <li><img src="assets/tech/python.svg" alt="" loading="lazy"><span>Python</span></li>
+            <li><img src="assets/tech/flask.svg" alt="" loading="lazy"><span>Flask</span></li>
+            <li><img src="assets/tech/html5.svg" alt="" loading="lazy"><span>HTML</span></li>
+            <li><img src="assets/tech/css.svg" alt="" loading="lazy"><span>CSS</span></li>
+          </ul>
+          <a href="https://lucky8.free.nf/Landing%20Page/php/login.php" class="project-link" target="_blank"
+            rel="noopener">View project <span aria-hidden="true">&rarr;</span></a>
+        </article>
+        <article class="fan-card">
+          <div class="pills"><span class="ptag">API</span><span class="ptag">Auth</span></div>
+          <div class="thumb"><span>02</span></div>
+          <h3>Inventory and Sales Management</h3>
+          <p>Versioned JSON API with Sanctum auth, rate limiting and auto-generated docs.</p>
+          <div class="tags"><span>Laravel</span><span>REST</span><span>Sanctum</span></div>
+          <a href="#" class="project-link">View project <span aria-hidden="true">&rarr;</span></a>
+        </article>
+        <article class="fan-card">
+          <div class="pills"><span class="ptag">Reporting</span></div>
+          <div class="thumb"><span>03</span></div>
+          <h3>Admin Dashboard</h3>
+          <p>Reporting dashboard with queued exports, charts and scheduled email summaries.</p>
+          <div class="tags"><span>PHP</span><span>MySQL</span><span>Chart.js</span></div>
+          <a href="#" class="project-link">View project <span aria-hidden="true">&rarr;</span></a>
+        </article>
+        <article class="fan-card">
+          <div class="pills"><span class="ptag">E-commerce</span></div>
+          <div class="thumb"><span>04</span></div>
+          <h3>E-Commerce Store</h3>
+          <p>Full-stack online shop with cart, checkout, payments and an admin panel.</p>
+          <div class="tags"><span>Laravel</span><span>MySQL</span><span>Stripe</span></div>
+          <a href="#" class="project-link">View project <span aria-hidden="true">&rarr;</span></a>
+        </article>
+      </div>
+      <div class="fan-controls">
+        <button type="button" class="fan-btn" data-fan-prev aria-label="Previous project">&larr;</button>
+        <span class="fan-count" data-fan-count aria-live="polite">1 / 4</span>
+        <button type="button" class="fan-btn" data-fan-next aria-label="Next project">&rarr;</button>
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack" class="section">
+      <div class="section-head">
+        <h2><span class="num">03</span> &mdash; stack</h2>
+      </div>
+      <div class="stack reveal">
+        <div class="stack-chips">
+          <span>PHP</span><span>Laravel</span><span>MySQL</span><span>REST APIs</span><span>JavaScript</span>
+          <span>Python</span><span>Flask</span><span>Chart.js</span><span>HTML</span><span>CSS</span>
+        </div>
+        <h3 class="stack-sub">Tools &amp; AI</h3>
         <div class="tools">
           <span class="tool"><i class="ic ic-vscode"><svg viewBox="0 0 24 24" aria-hidden="true">
                 <path
@@ -469,144 +301,35 @@
               </svg></i> Codex</span>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- PORTFOLIO -->
-  <section id="portfolio" class="section">
-    <div class="section-head">
-      <span class="eyebrow">Portfolio</span>
-      <h2>Selected work</h2>
-    </div>
-    <div class="projects">
-      <article class="project reveal" style="--accent:#6366f1">
-        <div class="thumb"><span>01</span></div>
-        <div class="project-body">
-          <h3>Web-Based Sales and Inventory Management</h3>
-          <p>Laravel app for stock tracking, suppliers and purchase orders with role-based access.</p>
-          <div class="tags"><span>PHP</span><span>MySQL</span><span>HTML</span><span>CSS</span><span>JavaScript</span>
-          </div>
-          <a href="https://lucky8.free.nf/Landing%20Page/php/login.php" class="project-link">View project <span aria-hidden="true">&rarr;</span></a>
-        </div>
-      </article>
-      <article class="project reveal" style="--accent:#22d3ee">
-        <div class="thumb"><span>02</span></div>
-        <div class="project-body">
-          <h3>REST API Platform</h3>
-          <p>Versioned JSON API with Sanctum auth, rate limiting and auto-generated docs.</p>
-          <div class="tags"><span>Laravel</span><span>REST</span><span>Sanctum</span></div>
-          <a href="#" class="project-link">View project <span aria-hidden="true">&rarr;</span></a>
-        </div>
-      </article>
-      <article class="project reveal" style="--accent:#f472b6">
-        <div class="thumb"><span>03</span></div>
-        <div class="project-body">
-          <h3>Admin Dashboard</h3>
-          <p>Reporting dashboard with queued exports, charts and scheduled email summaries.</p>
-          <div class="tags"><span>PHP</span><span>MySQL</span><span>Chart.js</span></div>
-          <a href="#" class="project-link">View project <span aria-hidden="true">&rarr;</span></a>
-        </div>
-      </article>
-      <article class="project reveal" style="--accent:#34d399">
-        <div class="thumb"><span>04</span></div>
-        <div class="project-body">
-          <h3>E-Commerce Store</h3>
-          <p>Full-stack online shop with cart, checkout, payments and an admin panel.</p>
-          <div class="tags"><span>Laravel</span><span>MySQL</span><span>Stripe</span></div>
-          <a href="#" class="project-link">View project <span aria-hidden="true">&rarr;</span></a>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact" class="section">
-    <div class="section-head">
-      <span class="eyebrow">Contact</span>
-      <h2>Let's work together</h2>
-    </div>
-    <div class="contact-grid">
-      <div class="contact-info reveal">
-        <p>Have a project in mind or just want to say hi? My inbox is always open.</p>
-        <ul>
-          <li><strong>Email</strong><a href="mailto:hello@example.com">alexmonfiel@gmail.com</a></li>
-          <li><strong>Location</strong><span>Philippines</span></li>
-          <li><strong>Availability</strong><span>Open for freelance</span></li>
-        </ul>
+    <!-- GITHUB -->
+    <section id="github" class="section">
+      <div class="section-head">
+        <h2><span class="num">04</span> &mdash; github</h2>
+        <a href="https://github.com/alxmnfl" target="_blank" rel="noopener" class="head-link">@alxmnfl <span
+            aria-hidden="true">&#8599;</span></a>
       </div>
-      <form class="contact-form reveal" id="contactForm">
-        <div class="row">
-          <input type="text" name="name" placeholder="Your name" required>
-          <input type="email" name="email" placeholder="Your email" required>
-        </div>
-        <input type="text" name="subject" placeholder="Subject">
-        <textarea name="message" rows="5" placeholder="Your message" required></textarea>
-        <button type="submit" class="btn btn-primary btn-send">Send Message <span aria-hidden="true">&rarr;</span></button>
-        <p class="form-note" id="formNote"></p>
-      </form>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <a href="#home" class="logo">Alexander<span>.</span></a>
-        <p>PHP &amp; Laravel developer building reliable web apps, clean REST APIs and databases people can depend on.
-        </p>
-        <span class="footer-status"><i></i>Open for freelance</span>
+      <div class="gh reveal" data-gh-user="alxmnfl">
+        <div class="gh-grid" data-gh-grid role="img" aria-label="GitHub contributions in the last year"></div>
+        <p class="gh-total" data-gh-total>Loading contributions&hellip;</p>
       </div>
+    </section>
 
-      <nav class="footer-col" aria-label="Footer navigation">
-        <h4>Navigate</h4>
-        <a href="#home">Home</a>
-        <a href="#about">About</a>
-        <a href="#portfolio">Portfolio</a>
-        <a href="#contact">Contact</a>
-      </nav>
-
-      <div class="footer-col">
-        <h4>Get in touch</h4>
-        <a href="mailto:hello@example.com">alexmonfiel@gmail.com</a>
-        <span>Philippines</span>
-        <div class="socials footer-socials">
-          <a href="https://github.com/alxmnfl" aria-label="GitHub" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24">
-              <path
-                d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.3-.52-1.47.11-3.06 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.06.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.2.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z" />
-            </svg>
-          </a>
-          <a href="https://www.linkedin.com/in/alex-monfiel-058408385/" aria-label="LinkedIn" target="_blank"
-            rel="noopener">
-            <svg viewBox="0 0 24 24">
-              <path
-                d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
-            </svg>
-          </a>
-          <a href="https://www.instagram.com/xndr.mf/" aria-label="Instagram" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24">
-              <path
-                d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85C2.38 3.92 3.9 2.38 7.15 2.23 8.42 2.17 8.8 2.16 12 2.16zM12 0C8.74 0 8.33.01 7.05.07 2.7.27.27 2.69.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.36 2.62 6.78 6.98 6.98C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c4.35-.2 6.78-2.62 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.62-6.78-6.98-6.98C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.85a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z" />
-            </svg>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <p>&copy; <span id="year"></span> Alexander V. Monfiel. Built with HTML, CSS &amp; JavaScript.</p>
+    <footer class="footer">
+      <p>&copy; <span id="year"></span> Alexander V. Monfiel</p>
       <a href="#home" class="back-top">Back to top &uarr;</a>
-    </div>
-  </footer>
+    </footer>
+  </main>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="js/year.js?v=6"></script>
-  <script src="js/navbar.js?v=6"></script>
-  <script src="js/activeNav.js?v=6"></script>
-  <script src="js/revealOnScroll.js?v=6"></script>
-  <script src="js/typingEffect.js?v=6"></script>
-  <script src="js/lanyard.js?v=6"></script>
-  <script src="js/contactForm.js?v=6"></script>
-  <script src="js/backgroundFx.js?v=6"></script>
+  <script src="js/year.js?v=7"></script>
+  <script src="js/navbar.js?v=7"></script>
+  <script src="js/activeNav.js?v=7"></script>
+  <script src="js/revealOnScroll.js?v=7"></script>
+  <script src="js/projectGallery.js?v=7"></script>
+  <script src="js/projectFan.js?v=7"></script>
+  <script src="js/profileDither.js?v=7"></script>
+  <script src="js/githubGraph.js?v=7"></script>
 </body>
 
 </html>

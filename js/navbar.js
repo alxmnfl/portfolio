@@ -1,20 +1,15 @@
-// ---------- Navbar: scrolled state + mobile menu ----------
-const nav = document.querySelector(".nav");
+// ---------- Mobile sidebar drawer ----------
+const sidebar = document.getElementById("sidebar");
 const burger = document.getElementById("burger");
-const navLinks = document.getElementById("navLinks");
 
-window.addEventListener("scroll", () => {
-  nav.classList.toggle("scrolled", window.scrollY > 20);
+const setOpen = (open) => {
+  sidebar.classList.toggle("open", open);
+  burger.classList.toggle("open", open);
+  burger.setAttribute("aria-expanded", String(open));
+};
+
+burger.addEventListener("click", () => setOpen(!sidebar.classList.contains("open")));
+sidebar.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") setOpen(false);
 });
-
-burger.addEventListener("click", () => {
-  burger.classList.toggle("open");
-  navLinks.classList.toggle("open");
-});
-navLinks.querySelectorAll("a").forEach((a) =>
-  a.addEventListener("click", () => {
-    burger.classList.remove("open");
-    navLinks.classList.remove("open");
-  }),
-);
-
